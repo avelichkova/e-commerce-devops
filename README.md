@@ -1,0 +1,1 @@
+E-Commerce DevOps Project - @FMI 2025-2026
