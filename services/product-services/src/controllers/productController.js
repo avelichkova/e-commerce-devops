@@ -47,7 +47,7 @@ class ProductController {
             if (category) filters.category = category;
             if (maxPrice) filters.maxPrice = parseFloat(maxPrice);
             if (minPrice) filters.minPrice = parseFloat(minPrice);
-            if (limit) filters.limit = parseInt(filters);
+            if (limit) filters.limit = parseInt(limit);
 
             const products = await Product.findAll(filters);
             res.json({
