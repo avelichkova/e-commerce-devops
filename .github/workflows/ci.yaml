@@ -33,6 +33,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
 
       - name: Run Tests
+        working-directory: services/product-services
         run: npm test
         
       - name: Stop Services
