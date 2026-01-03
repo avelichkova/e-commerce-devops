@@ -22,7 +22,8 @@ jobs:
         working-directory: services/product-services
         run: npm ci
 
-      - run: docker compose -d
+      - name: Start Services
+        run: docker compose up -d
 
       - name: Run Tests
         run: npm test
