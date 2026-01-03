@@ -5,6 +5,7 @@ const winston = require('winston');
 
 const { initializeDB } = require('./config/database');
 const productRoutes = require('./routes/productRoutes');
+const { pool } = require('../config/database');
 
 const app = express();
 const PORT = 3001;
@@ -39,6 +40,25 @@ app.use((req, res, next) => {
         userAgent: req.get('User-Agent')
     });
     next();
+});
+
+app.get('/health', async (req, res) => {
+    try {
+        await pool.query('SELECT 1');
+
+        res.json({
+            service: 'product-service',
+            status: 'healthy',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(503).json({
+            service: 'product-service',
+            status: 'unhealthy',
+            timestamp: new Date().toISOString(),
+            error: error.message
+        });
+    }
 });
 
 app.use('/api/products', productRoutes);
