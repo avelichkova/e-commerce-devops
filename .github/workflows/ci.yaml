@@ -39,5 +39,49 @@ jobs:
       - name: Stop Services
         if: always()
         run: docker compose down
+        
+  kubernetes-deployment:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build Docker image
+        run: |
+          docker build -t e-commerce-product-service:${{ github.sha }} ./services/product-services
+          docker tag e-commerce-product-service:${{ github.sha }} e-commerce-product-service:latest
+
+      - name: Set up minikube
+        uses: medyagh/setup-minikube@latest
+
+      - name: Load Docker Product image into minikube
+        run: minikube image load e-commerce-product-service:latest
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/secret.yaml
+          kubectl apply -f k8s/postgres.yaml
+          kubectl apply -f k8s/product-service.yaml
+
+      - name: Wait for deployment
+        run: |
+          kubectl wait --for=condition=available --timeout=300s deployment/postgres -n ecommerce
+          kubectl wait --for=condition=available --timeout=300s deployment/product-service -n ecommerce
+
+      - name: Test deployment
+        run: |
+          echo "Testing deployment.."
+
+          kubectl port-forward svc/product-service 3001:80 -n ecommerce 
+
+          curl -f http://localhost:3001/health || exit 1
+
+      - name: Show deployment status
+        run: |
+          echo "Deployment status: "
+          kubectl get pods -n ecommerce
+          kubectl get services -n ecommerce
 
