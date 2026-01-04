@@ -38,7 +38,7 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.sources=service
+            -Dsonar.sources=services/product-services
             -Dsonar.host.url=https://sonarcloud.io
 
   build-and-test:
