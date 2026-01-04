@@ -3,6 +3,10 @@
     "start": "node src/app.js",
     "test": "jest"
   },
+  "jest" : {
+    "collectCoverage": true,
+    "coverageReporters": ["lcov", "text"]
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
