@@ -76,7 +76,6 @@ const startServer = async () => {
     }
 };
 
-// direct push test
 
 startServer();
 module.exports = app;
