@@ -5,7 +5,7 @@ const winston = require('winston');
 
 const { initializeDB } = require('./config/database');
 const productRoutes = require('./routes/productRoutes');
-const { pool } = require('../config/database');
+const { pool } = require('./config/database');
 
 const app = express();
 const PORT = 3001;
@@ -58,7 +58,7 @@ app.get('/health', async (req, res) => {
             timestamp: new Date().toISOString(),
             error: error.message
         });
-    }
+    } 
 });
 
 app.use('/api/products', productRoutes);
@@ -66,7 +66,7 @@ app.use('/api/products', productRoutes);
 const startServer = async () => {
     try {
         await initializeDB();
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             logger.info(`Product service running on port ${PORT}`);
             console.log(`Product service running on port ${PORT}`);
         });
