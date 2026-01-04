@@ -41,6 +41,22 @@ jobs:
             -Dsonar.sources=services/product-services
             -Dsonar.host.url=https://sonarcloud.io
 
+      - name: Build Docker image for scanning
+        run: docker build -t e-commerce-product-service:${{ github.sha }} ./services/product-services
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: 'e-commerce-product-service:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
   build-and-test:
     runs-on: ubuntu-latest
 
