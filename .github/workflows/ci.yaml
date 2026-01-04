@@ -62,6 +62,13 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        with:
+          args: --file=./services/product-services/package.json --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
   build-and-test:
     runs-on: ubuntu-latest
 
