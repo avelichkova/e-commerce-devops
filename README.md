@@ -48,12 +48,7 @@ PORT=3001
 NODE_ENV=development
 ```
 
-4. **Start PostgreSQL with Docker Compose**
-```bash
-docker compose up -d
-```
-
-5. **Run the application**
+4. **Run the application**
 ```bash
 npm start
 ```
@@ -109,7 +104,7 @@ kubectl get services -n ecommerce
 
 3. **Access the service**
 ```bash
-kubectl port-forward svc/product-service 3001:80 -n ecommerce
+kubectl port-forward svc/product-service 3001:3001 -n ecommerce
 ```
 
 The API will be available at `http://localhost:3001`
@@ -122,22 +117,6 @@ kubectl apply -k k8s/
 ```
 
 ## API Endpoints
-
-### Products
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/products` | Create a new product |
-| GET | `/api/products` | Get all products (with optional filters) |
-| GET | `/api/products/:id` | Get a product by ID |
-| PUT | `/api/products/:id` | Update a product |
-| DELETE | `/api/products/:id` | Delete a product (soft delete) |
-
-### Query Parameters for GET /api/products
-- `category` - Filter by category
-- `minPrice` - Minimum price filter
-- `maxPrice` - Maximum price filter
-- `limit` - Limit number of results
 
 ### Example Request
 
