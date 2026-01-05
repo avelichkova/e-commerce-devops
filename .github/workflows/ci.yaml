@@ -122,7 +122,8 @@ jobs:
             namespace: ecommerce
           type: Opaque
           data:
-            db-password: ${{ secrets.DB_PASSWORD }}
+            db-password: $(echo -n "${{ secrets.DB_PASSWORD }}" | base64 -w 0)
+          EOF
       
       - name: Build Docker image
         run: |
