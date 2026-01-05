@@ -76,7 +76,7 @@ spec:
   selector:
     app: product-service
   ports:
-  - port: 80
+  - port: 3001
     targetPort: 3001
   type: ClusterIP
 

@@ -111,6 +111,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create secret.yaml from Github Secrets
+        run: |
+          cat <<EOF > k8s/secret.yaml
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: app-secrets
+            namespace: ecommerce
+          type: Opaque
+          data:
+            db-password: $(echo -n "${{ secrets.DB_PASSWORD }}" | base64 -w 0)
+          EOF
       
       - name: Build Docker image
         run: |
@@ -132,14 +145,14 @@ jobs:
 
       - name: Wait for deployment
         run: |
-          kubectl wait --for=condition=available --timeout=300s deployment/postgres -n ecommerce
-          kubectl wait --for=condition=available --timeout=300s deployment/product-service -n ecommerce
+          kubectl wait --for=condition=available --timeout=100s deployment/postgres -n ecommerce
+          kubectl wait --for=condition=available --timeout=100s deployment/product-service -n ecommerce
 
       - name: Test deployment
         run: |
           echo "Testing deployment.."
 
-          timeout 30s kubectl port-forward svc/product-service 3001:80 -n ecommerce & sleep 5
+          timeout 30s kubectl port-forward svc/product-service 3001:3001 -n ecommerce & sleep 5
 
           curl -f http://localhost:3001/api/products || exit 1
 
