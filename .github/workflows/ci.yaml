@@ -111,6 +111,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create secret.yaml from Github Secrets
+        run: |
+          cat <<EOF > k8s/secret.yaml
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: app-secrets
+            namespace: ecommerce
+          type: Opaque
+          data:
+            db-password: ${{ secrets.DB_PASSWORD }}
       
       - name: Build Docker image
         run: |
